@@ -219,15 +219,15 @@ class AuthDashboardController extends Controller
     /**
      * User tour completed for first time visit
      */
-    public function tourCompleted()
+    public function tourCompleted(Request $request)
     {
-        $user = auth()->user();
-        $user->update([
-            'tour_completed' => true,
-        ]);
+        $user = $request->user();
+        $user->tour_completed = true;
+        $user->save();
 
-        return redirect()->route('dashboard');
+        return back(); // atau response kosong
     }
+
 
     /**
      * Kid dashboard visit with details

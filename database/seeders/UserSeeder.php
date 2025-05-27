@@ -17,6 +17,7 @@ class UserSeeder extends Seeder
     public function run()
     {
         $admin = User::create([
+            'id' => 5,
             'name' => 'Developer',
             'role' => 'Admin',
             'email' => 'developer@mail.com',
@@ -24,37 +25,37 @@ class UserSeeder extends Seeder
             'date_of_birth' => '1997-01-31',
         ]);
 
-        $accountant = User::create([
-            'name' => 'Accountant',
-            'role' => 'Accountant',
-            'email' => 'accountant@mail.com',
-            'password' => bcrypt('password'),
-            'date_of_birth' => '1997-02-01',
-        ]);
+        // $accountant = User::create([
+        //     'name' => 'Accountant',
+        //     'role' => 'Accountant',
+        //     'email' => 'accountant@mail.com',
+        //     'password' => bcrypt('password'),
+        //     'date_of_birth' => '1997-02-01',
+        // ]);
 
-        $teacher = User::create([
-            'name' => 'Teacher',
-            'role' => 'Teacher',
-            'email' => 'teacher@mail.com',
-            'password' => bcrypt('password'),
-            'date_of_birth' => '1995-04-22',
-        ]);
+        // $teacher = User::create([
+        //     'name' => 'Teacher',
+        //     'role' => 'Teacher',
+        //     'email' => 'teacher@mail.com',
+        //     'password' => bcrypt('password'),
+        //     'date_of_birth' => '1995-04-22',
+        // ]);
 
-        $parent = User::create([
-            'name' => 'Parent',
-            'role' => 'Parent',
-            'email' => 'parent@mail.com',
-            'password' => bcrypt('password'),
-            'date_of_birth' => '1996-01-30',
-        ]);
+        // $parent = User::create([
+        //     'name' => 'Parent',
+        //     'role' => 'Parent',
+        //     'email' => 'parent@mail.com',
+        //     'password' => bcrypt('password'),
+        //     'date_of_birth' => '1996-01-30',
+        // ]);
 
-        $student = User::create([
-            'name' => 'Student',
-            'role' => 'Student',
-            'email' => 'student@mail.com',
-            'password' => bcrypt('password'),
-            'date_of_birth' => '1996-01-25',
-        ]);
+        // $student = User::create([
+        //     'name' => 'Student',
+        //     'role' => 'Student',
+        //     'email' => 'student@mail.com',
+        //     'password' => bcrypt('password'),
+        //     'date_of_birth' => '1996-01-25',
+        // ]);
 
         User::factory()->count(100)->create();
 
