@@ -21,9 +21,6 @@
 # Ignore Composer files
 composer.lock
 
-/public/uploads/smkn-1-kawali-teacher.apk
-/public/uploads/smkn-1-kawali-student.apk
-
 # Ignore node_modules
 node_modules/
 

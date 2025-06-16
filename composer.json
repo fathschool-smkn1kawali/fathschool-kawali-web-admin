@@ -23,7 +23,6 @@
         "macsidigital/laravel-zoom": "^5.0",
         "midtrans/midtrans-php": "^2.5",
         "msztorc/laravel-env": "^1.2",
-        "php-http/message-factory": "^1.1",
         "psr/simple-cache": "^1.0",
         "pusher/pusher-php-server": "^7.2",
         "ramsey/uuid": "^4.7",

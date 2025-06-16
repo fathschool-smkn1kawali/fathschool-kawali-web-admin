@@ -64,7 +64,13 @@ class ReportController extends Controller
             return response()->json(['error' => 'Format tanggal tidak valid.'], 400);
         }
 
-        $dates = collect(Carbon::parse($start_date)->daysUntil($end_date))->map(fn($date) => $date->toDateString());
+        $dates = collect(Carbon::parse($start_date)->daysUntil($end_date))
+            ->filter(function ($date) {
+                $dayName = Carbon::parse($date)->format('l');
+                return !in_array($dayName, ['Saturday', 'Sunday']);
+            })
+            ->map(fn($date) => $date->toDateString())
+            ->values();
 
         $studentsQuery = User::where('role', 'student')
             ->with(['courses.course:id,name,slug,study_program_id', 'leaves']);
@@ -107,10 +113,13 @@ class ReportController extends Controller
                 }
 
                 $attendanceStatus = $dates->mapWithKeys(function ($date) use ($userAttendances, $leaveDates) {
+                    $dayName = Carbon::parse($date)->format('l');
+                    if (in_array($dayName, ['Saturday', 'Sunday'])) {
+                        return []; // Lewati Sabtu & Minggu
+                    }
                     if ($leaveDates->contains($date)) {
                         return [$date => 'I']; // Izin
                     }
-
                     $attendance = $userAttendances->firstWhere('date', $date);
                     return [$date => $attendance ? 'H' : 'A']; // Hadir atau Alfa
                 });
@@ -210,6 +219,9 @@ class ReportController extends Controller
             $weekDays = [];
             if (!$hasDateParams) {
                 for ($date = clone $startOfWeek; $date->lte($endOfWeek); $date->addDay()) {
+                    if (in_array($date->format('l'), ['Saturday', 'Sunday'])) {
+                        continue;
+                    }
                     $weekDays[$date->format('Y-m-d')] = [
                         'date' => $date->format('d M Y'),
                         'day' => $this->convertDayToIndonesian($date->format('l')),
@@ -222,7 +234,7 @@ class ReportController extends Controller
                 // Gabungkan dengan data kehadiran yang ada
                 foreach ($attendances as $attendance) {
                     $weekDays[$attendance->date] = array_merge($weekDays[$attendance->date], [
-                        'status' => isset($attendance->latlon_in) ? 'Hadir' : 'Tidak Hadir',
+                        'status' => isset($attendance->latlon_in) ? 'H' : 'Tidak Hadir',
                         'check_in' => $attendance->time_in ? Carbon::parse($attendance->time_in)->format('H:i') : null,
                         'check_out' => $attendance->time_out ? Carbon::parse($attendance->time_out)->format('H:i') : null,
                     ]);
@@ -328,13 +340,16 @@ class ReportController extends Controller
             if (!$hasDateParams) {
                 // Buat array default untuk setiap hari dalam seminggu
                 for ($date = clone $startOfWeek; $date->lte($endOfWeek); $date->addDay()) {
+                    if (in_array($date->format('l'), ['Saturday', 'Sunday'])) {
+                        continue;
+                    }
                     $currentDate = $date->format('Y-m-d');
                     $attendance = $attendances->where('date', $currentDate)->first();
 
                     $formattedAttendances[] = [
                         'date' => $date->format('d M Y'),
                         'day' => $this->convertDayToIndonesian($date->format('l')),
-                        'status' => $attendance && $attendance->latlon_in ? 'Hadir' : 'Tidak Hadir',
+                        'status' => $attendance && $attendance->latlon_in ? 'H' : 'Tidak Hadir',
                         'check_in' => $attendance && $attendance->time_in ? Carbon::parse($attendance->time_in)->format('H:i') : '-',
                         'check_out' => $attendance && $attendance->time_out ? Carbon::parse($attendance->time_out)->format('H:i') : '-',
                     ];
@@ -398,9 +413,6 @@ class ReportController extends Controller
 
         return $days[$day] ?? $day;
     }
-
-
-
 
     private function calculatePercentages($counts, $attendanceData, $type = 'present')
     {

@@ -331,16 +331,12 @@ export default {
             const start = new Date(this.filter.start_date);
             const end = new Date(this.filter.end_date);
             const dates = [];
-
-            for (
-                let d = new Date(start);
-                d <= end;
-                d.setDate(d.getDate() + 1)
-            ) {
-                let formattedDate = d.toLocaleDateString("id-ID"); // format DD/MM/YYYY
+            for (let d = new Date(start); d <= end; d.setDate(d.getDate() + 1)) {
+                const day = d.getDay();
+                if (day === 0 || day === 6) continue; // Lewati Sabtu & Minggu
+                let formattedDate = d.toISOString().slice(0, 10); // YYYY-MM-DD
                 dates.push(formattedDate);
             }
-
             return dates;
         },
 

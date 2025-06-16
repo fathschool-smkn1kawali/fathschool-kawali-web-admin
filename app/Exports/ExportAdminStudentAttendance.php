@@ -20,7 +20,7 @@ class ExportAdminStudentAttendance implements FromCollection, WithHeadings, With
     {
         $this->student = $student;
         $this->start_date = $start_date;
-        $this->end_dte = $end_date;
+        $this->end_date = $end_date;
     }
 
     /**
@@ -32,7 +32,12 @@ class ExportAdminStudentAttendance implements FromCollection, WithHeadings, With
             ->where('student_id', $this->student)
             ->whereDate('created_at', '>=', Carbon::parse($this->start_date))
             ->whereDate('created_at', '<=', Carbon::parse($this->end_date))
-            ->get();
+            ->get()
+            // Tambahkan filter di sini:
+            ->filter(function ($attendance) {
+                $dayName = Carbon::parse($attendance->date_time)->format('l');
+                return !in_array($dayName, ['Saturday', 'Sunday']);
+            });
 
         return $attendances;
     }

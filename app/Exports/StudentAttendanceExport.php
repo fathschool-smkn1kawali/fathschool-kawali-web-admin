@@ -43,7 +43,13 @@ class StudentAttendanceExport implements FromCollection, WithHeadings, WithMappi
             return collect([]);
         }
 
-        $dates = collect(Carbon::parse($start_date)->daysUntil($end_date))->map(fn($date) => $date->toDateString());
+        $dates = collect(Carbon::parse($start_date)->daysUntil($end_date))
+            ->filter(function ($date) {
+                $dayName = Carbon::parse($date)->format('l');
+                return !in_array($dayName, ['Saturday', 'Sunday']);
+            })
+            ->map(fn($date) => $date->toDateString())
+            ->values();
 
         $studentsQuery = User::where('role', 'student')
             ->with(['courses.course:id,name,slug,study_program_id', 'leaves']);
@@ -131,7 +137,14 @@ class StudentAttendanceExport implements FromCollection, WithHeadings, WithMappi
     {
         $start = Carbon::parse($this->start_date);
         $end = Carbon::parse($this->end_date);
-        $dates = collect($start->daysUntil($end))->map(fn($date) => $date->format('d/m/Y'))->toArray();
+        $dates = collect($start->daysUntil($end))
+            ->filter(function ($date) {
+                $dayName = Carbon::parse($date)->format('l');
+                return !in_array($dayName, ['Saturday', 'Sunday']);
+            })
+            ->map(fn($date) => $date->format('d/m/Y'))
+            ->values()
+            ->toArray();
 
         return array_merge(
             ['No', 'Nama Siswa', 'Kelas'],
@@ -180,8 +193,12 @@ class StudentAttendanceExport implements FromCollection, WithHeadings, WithMappi
     {
         $start = Carbon::parse($this->start_date);
         $end = Carbon::parse($this->end_date);
-        $dateCount = $start->diffInDays($end) + 1;
-
+        $dates = collect($start->daysUntil($end))
+            ->filter(function ($date) {
+                $dayName = Carbon::parse($date)->format('l');
+                return !in_array($dayName, ['Saturday', 'Sunday']);
+            });
+        $dateCount = $dates->count();
         $base = 4 + $dateCount;
         $colLetters = [
             Coordinate::stringFromColumnIndex($base),

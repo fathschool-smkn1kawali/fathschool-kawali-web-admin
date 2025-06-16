@@ -71,13 +71,15 @@
         </thead>
         <tbody>
             @foreach($attendances as $attendance)
-                <tr>
-                    <td>{{ $attendance['date'] }}</td>
-                    <td>{{ $attendance['day'] }}</td>
-                    <td>{{ $attendance['status'] }}</td>
-                    <td>{{ $attendance['check_in'] }}</td>
-                    <td>{{ $attendance['check_out'] }}</td>
-                </tr>
+                @if(!in_array($attendance['day'], ['Sabtu', 'Minggu']))
+                    <tr>
+                        <td>{{ $attendance['date'] }}</td>
+                        <td>{{ $attendance['day'] }}</td>
+                        <td>{{ $attendance['status'] }}</td>
+                        <td>{{ $attendance['check_in'] }}</td>
+                        <td>{{ $attendance['check_out'] }}</td>
+                    </tr>
+                @endif
             @endforeach
         </tbody>
     </table>
