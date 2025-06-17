@@ -78,15 +78,22 @@
     <SpeakerWaveIcon class="sm:w-6 w-5 sm:h-6 h-5" />
     </Link>
     <div class="hs-dropdown relative inline-flex" data-hs-dropdown-placement="bottom-right">
-        <button id="hs-dropdown-with-header" v-if="$page.props.jetstream.managesProfilePhotos" type="button"
-            class="hs-dropdown-toggle inline-flex flex-shrink-0 justify-center items-center rounded-full font-medium bg-white text-gray-700 align-middle hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-offset-2 focus:ring-offset-white transition-all text-xs dark:bg-gray-800 dark:hover:bg-slate-800 dark:text-gray-400 dark:hover:text-white dark:focus:ring-gray-700 dark:focus:ring-offset-gray-800">
-            <img class="inline-block sm:h-8 h-5 sm:w-8 w-5 rounded-full ring-2 ring-white dark:ring-gray-800"
-                :src="$page.props.user.profile_photo_url" :alt="$page.props.user.name" />
+        <button
+            id="hs-dropdown-with-header"
+            v-if="$page.props.jetstream.managesProfilePhotos && $page.props.user"
+            type="button"
+            class="hs-dropdown-toggle inline-flex flex-shrink-0 justify-center items-center rounded-full font-medium bg-white text-gray-700 align-middle hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-offset-2 focus:ring-offset-white transition-all text-xs dark:bg-gray-800 dark:hover:bg-slate-800 dark:text-gray-400 dark:hover:text-white dark:focus:ring-gray-700 dark:focus:ring-offset-gray-800"
+        >
+            <img
+                class="inline-block sm:h-8 h-5 sm:w-8 w-5 rounded-full ring-2 ring-white dark:ring-gray-800"
+                :src="$page.props.user.profile_photo_url"
+                :alt="$page.props.user ? $page.props.user.name : ''"
+            />
         </button>
         <span v-else class="inline-flex rounded-md">
             <button type="button"
                 class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 bg-white hover:text-gray-700 focus:outline-none transition">
-                {{ $page.props.user.name }}
+                {{ $page.props.user ? $page.props.user.name : '' }}
                 <ArrowDownIcon class="md:w-6 w-4 md:h-6 h-4" />
             </button>
         </span>
