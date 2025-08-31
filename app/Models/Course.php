@@ -9,6 +9,8 @@ use Illuminate\Support\Str;
 use App\Models\Api\ClassAttendance;
 use App\Models\Api\LearningLesson;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use App\Models\Result;
+use App\Models\User;
 
 class Course extends Model
 {
@@ -93,8 +95,8 @@ class Course extends Model
     // One to many relation with result model
     public function results()
     {
-        return $this->hasMany(Result::class, 'course_id', 'id');
-    }
+        return $this->hasMany(ResultRule::class, 'course_id', 'id');
+    } // (ResultRule::class, 'course_id', 'id'); Result to ResultRule
 
     // One to one relation with plan model
     public function plans()

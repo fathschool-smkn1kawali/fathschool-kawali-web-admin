@@ -124,7 +124,7 @@ import {
     DocumentPlusIcon,
     HomeIcon,
 } from "@heroicons/vue/24/outline";
-import Shepherd from "shepherd.js";
+
 
 export default {
     components: {
@@ -141,43 +141,6 @@ export default {
         BanknotesIcon,
         CurrencyDollarIcon,
         HomeIcon,
-    },
-    data() {
-        return {
-            tour: null,
-            steps: [
-                {
-                    title: this.getOnboardingContent("welcome", "title"),
-                    text: this.getOnboardingContent("welcome", "description"),
-                    attachTo: { element: "#welcome", on: "bottom" },
-                    buttons: [{ action: this.tourGoNext, text: "Next" }],
-                },
-                {
-                    title: this.getOnboardingContent("topbar_section", "title"),
-                    text: this.getOnboardingContent(
-                        "topbar_section",
-                        "description"
-                    ),
-                    attachTo: { element: ".topbar_section", on: "bottom" },
-                    buttons: [{ action: this.tourGoNext, text: "Next" }],
-                },
-                {
-                    title: this.getOnboardingContent(
-                        "sidebar_section",
-                        "title"
-                    ),
-                    text: this.getOnboardingContent(
-                        "sidebar_section",
-                        "description"
-                    ),
-                    attachTo: { element: ".sidebar_section", on: "right" },
-                    buttons: [
-                        { action: this.complete, text: "Complete" },
-                        { action: this.tourGoNext, text: "Quick overview" },
-                    ],
-                },
-            ],
-        };
     },
 
     mounted() {
@@ -210,37 +173,6 @@ export default {
     },
 
     methods: {
-        tourGoNext() {
-            this.tour.next();
-            this.completeStep();
-        },
-        completeStep() {
-            let total_steps = this.tour.steps.length;
-            let current_step = this.tour.steps.indexOf(this.tour.currentStep);
-            if (total_steps === current_step + 1) {
-                this.complete();
-            }
-        },
-        complete() {
-            localStorage.setItem("tourCompleted", "true"); // Simpan status selesai
-            this.closeTour();
-        },
-        closeTour() {
-            this.tour.cancel(); // Menutup tour
-            this.tour = null; // Hapus instance tour
-            this.steps = []; // Kosongkan langkah-langkah
-
-            // Tutup sidebar jika masih terbuka
-            const sidebar = document.querySelector(".sidebar");
-            const sidebarOverlay = document.querySelector(".sidebar-overlay");
-            if (sidebar && sidebarOverlay) {
-                sidebar.classList.remove("active");
-                sidebarOverlay.classList.remove("active");
-            }
-        },
-        tourGoback() {
-            this.tour.back();
-        },
     },
 };
 </script>

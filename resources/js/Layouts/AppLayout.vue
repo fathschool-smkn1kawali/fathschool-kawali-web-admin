@@ -142,9 +142,12 @@
 
 
 <script setup>
-    import { ref, onMounted, watch } from "vue";
+    import { ref, onMounted, nextTick } from "vue"; // <-- PERBAIKAN: Tambahkan nextTick
     import { Inertia } from "@inertiajs/inertia";
-    import { Head, Link } from "@inertiajs/inertia-vue3";
+    import { Head, Link, usePage } from "@inertiajs/inertia-vue3";
+    import Shepherd from 'shepherd.js'; // <-- PERBAIKAN: Import Shepherd.js
+
+    // ... (Semua import komponen Anda yang lain tetap sama) ...
     import JetBanner from "@/Jetstream/Banner.vue";
     import AuthorWidget from "../Shared/Components/AuthorWidget.vue";
     import NavLink from "@/Components/Sidebar/NavLink.vue";
@@ -156,29 +159,72 @@
     import StudentSidebarMenu from "@/Layouts/Sidebar/StudentSidebarMenu.vue";
     import ParentSidebarMenu from "@/Layouts/Sidebar/ParentSidebarMenu.vue";
     import OtherRoleMenu from "@/Layouts/Sidebar/OtherRoleMenu.vue";
-    import { usePage } from '@inertiajs/inertia-vue3';
     import QuickPanel from './QuickPanel.vue';
     import Notification from './Notification.vue';
     import TopBarMenu from './TopBarMenu.vue';
     import { HomeIcon, CalendarIcon, CalendarDaysIcon, ExclamationTriangleIcon, Bars3Icon, ChevronRightIcon, MagnifyingGlassIcon } from '@heroicons/vue/24/outline'
+
     defineProps({
         title: String,
     });
 
     const showingNavigationDropdown = ref(false);
-
     var kids = ref(usePage().props.value.kids);
     var already_step_completed = ref(usePage().props.value?.auth?.tour_completed);
-    // get viewing children;
     var selected_child = localStorage.getItem('selected_child');
 
+    // ### PERBAIKAN: Logika Tur Disentralisasi di Sini ###
+    const tour = ref(null);
+
+    const markTourAsCompleted = () => {
+        if (tour.value) {
+            Inertia.post(route('tour.completed'), {}, {
+                preserveScroll: true
+            });
+        }
+    };
+
+    const initializeAndStartTour = () => {
+        tour.value = new Shepherd.Tour({
+            useModalOverlay: true,
+            defaultStepOptions: {
+                scrollTo: { behavior: 'smooth', block: 'center' },
+                cancelIcon: { enabled: true }
+            }
+        });
+
+        const tourSteps = [
+            // Ganti #welcome dengan selector elemen yang ada di halaman Dashboard Anda
+            { id: 'welcome', options: { title: 'Welcome!', text: 'Welcome to your dashboard.', attachTo: { element: 'body', on: 'auto' }}},
+            { id: 'topbar', options: { title: 'Top Bar', text: 'Access profile and settings here.', attachTo: { element: '.topbar_section', on: 'bottom' }}},
+            { id: 'sidebar', options: { title: 'Sidebar', text: 'Navigate through the application sections.', attachTo: { element: '.sidebar_section', on: 'right' }}}
+        ];
+
+        tourSteps.forEach(stepData => {
+            if (document.querySelector(stepData.options.attachTo.element)) {
+                tour.value.addStep(stepData.options);
+            }
+        });
+
+        if (tour.value.steps.length > 0) {
+            tour.value.start();
+        }
+
+        tour.value.on('complete', markTourAsCompleted);
+        tour.value.on('cancel', markTourAsCompleted);
+    };
+    // ### AKHIR DARI PERBAIKAN LOGIKA TUR ###
+
+
     onMounted(() => {
+        // Logika untuk dark mode (tetap dipertahankan)
         if (localStorage.getItem("darkMode") == "true") {
             document.body.classList.add("dark");
         } else {
             document.body.classList.remove("dark");
         }
 
+        // DOM Selectors untuk sidebar (tetap dipertahankan)
         const sidebarToggle = document.querySelector(".sidebar-toggle");
         const sidebar = document.querySelector(".sidebar");
         const qPanel = document.querySelector("#quickPanel");
@@ -188,10 +234,16 @@
         const npanelOverlay = document.querySelector(".npanel-overlay");
         const closeMenu = document.querySelector(".close-menu");
 
-        if (!already_step_completed.value) {
-            sidebar.classList.add("active");
-            sidebarOverlay.classList.add("active");
+        // ### PERBAIKAN: Menjalankan tur di sini ###
+        if (!already_step_completed.value && route().current('dashboard')) {
+            // nextTick memastikan semua elemen di halaman (termasuk dari child component)
+            // sudah selesai dirender sebelum tur dimulai.
+            nextTick(() => {
+                initializeAndStartTour();
+            });
         }
+        
+        // Logika event listener untuk sidebar (tetap dipertahankan)
         sidebarToggle.addEventListener("click", () => {
             sidebar.classList.add("active");
             sidebarOverlay.classList.add("active");
@@ -233,34 +285,7 @@
         });
     });
 
-    const visitChildren = () => {
-        localStorage.setItem('selected_child', selected_child)
-        Inertia.get(route('kid.dashboard', selected_child))
-        // to update name
-        getChildName();
-    }
-
-    const switchToTeam = (team) => {
-        Inertia.put(
-            route("current-team.update"), {
-            team_id: team.id,
-        }, {
-            preserveState: false,
-        }
-        );
-        Inertia.put(
-            route("current-team.update"), {
-            team_id: team.id,
-        }, {
-            preserveState: false,
-        }
-        );
-    };
-    const ChangeDic = (arg) => {
-        document.body.setAttribute("dir", arg);
-    };
-
-    // get viewing children name
+    // ... (Semua fungsi Anda yang lain seperti getChildName, goToDashboard, dll tetap sama) ...
     function getChildName() {
         let name = '';
         for (let index = 0; index < kids.value.length; index++) {

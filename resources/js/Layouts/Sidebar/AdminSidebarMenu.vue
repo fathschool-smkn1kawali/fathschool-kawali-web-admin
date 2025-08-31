@@ -94,35 +94,35 @@
         </Transition>
     </li>
     <li v-if="can('event.index')" class="leave_request_section">
-    <a @click="toggleList('leaveList')"
-       class="flex justify-between gap-x-3 py-2 px-2.5 text-sm hover:bg-blue-100 text-slate-700 dark:text-slate-400 dark:hover:bg-slate-700 rounded-lg dark:hover:text-white"
-       href="javascript:void(0)" id="leaveDropdown">
-        <div class="flex gap-x-3 items-center">
-            <QueueListIcon class="w-5 h-5" />
-            <div class="text-sm">{{ __("Leave Request") }}</div>
-        </div>
-        <div>
-            <ChevronUpIcon v-if="leaveList" class="w-5 h-5" />
-            <ChevronDownIcon v-else class="w-5 h-5" />
-        </div>
-    </a>
-    <Transition>
-        <ul class="ml-4" v-if="leaveList">
-            <li>
-                <NavLink class="mt-1" :active="route().current('manage-leave.index')" :href="route('manage-leave.index')">
-                    <list-icon />
-                    {{ __("Teacher / Administartion") }}
-                </NavLink>
-            </li>
-            <li>
-                <NavLink class="mt-1" :active="route().current('leave-student.index')" :href="route('leave-student.index')">
-                    <list-icon />
-                    {{ __("Student") }}
-                </NavLink>
-            </li>
-        </ul>
-    </Transition>
-</li>
+        <a @click="toggleList('leaveList')"
+        class="flex justify-between gap-x-3 py-2 px-2.5 text-sm hover:bg-blue-100 text-slate-700 dark:text-slate-400 dark:hover:bg-slate-700 rounded-lg dark:hover:text-white"
+        href="javascript:void(0)" id="leaveDropdown">
+            <div class="flex gap-x-3 items-center">
+                <QueueListIcon class="w-5 h-5" />
+                <div class="text-sm">{{ __("Leave Request") }}</div>
+            </div>
+            <div>
+                <ChevronUpIcon v-if="leaveList" class="w-5 h-5" />
+                <ChevronDownIcon v-else class="w-5 h-5" />
+            </div>
+        </a>
+        <Transition>
+            <ul class="ml-4" v-if="leaveList">
+                <li>
+                    <NavLink class="mt-1" :active="route().current('manage-leave.index')" :href="route('manage-leave.index')">
+                        <list-icon />
+                        {{ __("Teacher / Administartion") }}
+                    </NavLink>
+                </li>
+                <li>
+                    <NavLink class="mt-1" :active="route().current('leave-student.index')" :href="route('leave-student.index')">
+                        <list-icon />
+                        {{ __("Student") }}
+                    </NavLink>
+                </li>
+            </ul>
+        </Transition>
+    </li>
     <!-- <li v-if="can('meeting.index')" class="meeting_section">
         <NavLink :href="route('meeting.index')" :active="route().current('meeting.*')">
             <VideoCameraIcon class="h-5 w-5" />
@@ -186,6 +186,7 @@
             {{ __("All Students") }}
         </NavLink>
     </li>
+
     <li v-if="can('admission.index')" class="admission_section">
         <NavLink :href="route('student.admission.index')"
             :active="!route().current('student.admission.all') && route().current('student.admission.*')"
@@ -214,6 +215,7 @@
             {{ __("Admission Form") }}
         </NavLink>
     </li>
+
     <li class="text-xs uppercase mb-2 text-gray-500 pt-6 pl-2">
         {{ __('Others') }}
     </li>
@@ -287,7 +289,6 @@ import {
     ChevronUpIcon, Cog8ToothIcon, DocumentPlusIcon, FlagIcon, QueueListIcon, UserIcon, VideoCameraIcon, SpeakerWaveIcon, HomeIcon, WalletIcon, UsersIcon, NewspaperIcon, QrCodeIcon, ClipboardDocumentListIcon
 
 } from "@heroicons/vue/24/outline";
-import Shepherd from "shepherd.js";
 
 export default {
     components: {
@@ -332,501 +333,9 @@ export default {
                     ]
                 }
             ],
-            tour: null,
-            steps: [
-                {
-                    title: this.getOnboardingContent('welcome', 'title'),
-                    text: this.getOnboardingContent('welcome', 'description'),
-                    attachTo: {
-                        element: "#welcome",
-                        on: "bottom"
-                    },
-                    buttons: [
-                        {
-                            action: this.tourGoNext,
-                            text: "Next"
-                        }
-                    ]
-                },
-                {
-                    title: this.getOnboardingContent('topbar_section', 'title'),
-                    text: this.getOnboardingContent('topbar_section', 'description'),
-                    attachTo: {
-                        element: ".topbar_section",
-                        on: "bottom"
-                    },
-                    buttons: [
-                        {
-                            action: this.tourGoNext,
-                            text: "Next"
-                        }
-                    ]
-                },
-                {
-                    title: this.getOnboardingContent('sidebar_section', 'title'),
-                    text: this.getOnboardingContent('sidebar_section', 'description'),
-                    attachTo: {
-                        element: ".sidebar_section",
-                        on: "right"
-                    },
-                    buttons: [
-                        {
-                            action: this.tourGoNext,
-                            text: "Next"
-                        }
-                    ]
-                },
-                {
-                    title: this.getOnboardingContent('website_settings_section', 'title'),
-                    text: this.getOnboardingContent('website_settings_section', 'description'),
-                    attachTo: {
-                        element: ".website_settings_section",
-                        on: "bottom"
-                    },
-                    buttons: [
-                        {
-                            action: this.complete,
-                            text: "Complete"
-                        },
-                        {
-                            action: this.tourGoNext,
-                            text: "Ouick Over"
-                        }
-                    ]
-                },
-                {
-                    title: this.getOnboardingContent('notice_board_top_section', 'title'),
-                    text: this.getOnboardingContent('notice_board_top_section', 'description'),
-                    attachTo: {
-                        element: ".notice_board_top_section",
-                        on: "bottom"
-                    },
-                    buttons: [
-                        {
-                            action: this.tourGoNext,
-                            text: "Next"
-                        }
-                    ]
-                },
-                {
-                    title: this.getOnboardingContent('corseqr_board_top_section', 'title'),
-                    text: this.getOnboardingContent('corseqr_board_top_section', 'description'),
-                    attachTo: {
-                        element: ".corseqr_board_top_section",
-                        on: "bottom"
-                    },
-                    buttons: [
-                        {
-                            action: this.tourGoNext,
-                            text: "Next"
-                        }
-                    ]
-                },
-                {
-                    title: this.getOnboardingContent('teacherattendance_board_top_section', 'title'),
-                    text: this.getOnboardingContent('teacherattendance_board_top_section', 'description'),
-                    attachTo: {
-                        element: ".teacherattendance_board_top_section",
-                        on: "bottom"
-                    },
-                    buttons: [
-                        {
-                            action: this.tourGoNext,
-                            text: "Next"
-                        }
-                    ]
-                },
-                {
-                    title: this.getOnboardingContent('leave_request_top_section', 'title'),
-                    text: this.getOnboardingContent('leave_request_top_section', 'description'),
-                    attachTo: {
-                        element: ".leave_request_top_section",
-                        on: "bottom"
-                    },
-                    buttons: [
-                        {
-                            action: this.tourGoNext,
-                            text: "Next"
-                        }
-                    ]
-                },
-
-                {
-                    title: this.getOnboardingContent('notification', 'title'),
-                    text: this.getOnboardingContent('notification', 'description'),
-                    attachTo: {
-                        element: "#notification",
-                        on: "bottom"
-                    },
-                    buttons: [
-                        {
-                            action: this.tourGoNext,
-                            text: "Next"
-                        }
-                    ]
-                },
-
-                {
-                    title: this.getOnboardingContent('currency', 'title'),
-                    text: this.getOnboardingContent('currency', 'description'),
-                    attachTo: {
-                        element: "#currency",
-                        on: "bottom"
-                    },
-                    buttons: [
-                        {
-                            action: this.tourGoNext,
-                            text: "Next"
-                        }
-                    ]
-                },
-
-                {
-                    title: this.getOnboardingContent('language', 'title'),
-                    text: this.getOnboardingContent('language', 'description'),
-                    attachTo: {
-                        element: "#language",
-                        on: "bottom"
-                    },
-                    buttons: [
-                        {
-                            action: this.tourGoNext,
-                            text: "Next"
-                        }
-                    ]
-                },
-
-                {
-                    title: this.getOnboardingContent('darkMode', 'title'),
-                    text: this.getOnboardingContent('darkMode', 'description'),
-                    attachTo: {
-                        element: "#darkMode",
-                        on: "bottom"
-                    },
-                    buttons: [
-                        {
-                            action: this.tourGoNext,
-                            text: "Next"
-                        }
-                    ]
-                },
-
-                {
-                    title: this.getOnboardingContent('academic_section', 'title'),
-                    text: this.getOnboardingContent('academic_section', 'description'),
-                    attachTo: {
-                        element: ".academic_section",
-                        on: "right"
-                    },
-                    buttons: [
-                        {
-                            action: this.tourGoNext,
-                            text: "Next"
-                        }
-                    ]
-                },
-
-                {
-                    title: this.getOnboardingContent('meeting', 'title'),
-                    text: this.getOnboardingContent('meeting', 'description'),
-                    attachTo: {
-                        element: ".meeting_section",
-                        on: "right"
-                    },
-                    buttons: [
-                        {
-                            action: this.tourGoNext,
-                            text: "Next"
-                        }
-                    ]
-                },
-
-                {
-                    title: this.getOnboardingContent('leave_request_section', 'title'),
-                    text: this.getOnboardingContent('leave_request_section', 'description'),
-                    attachTo: {
-                        element: ".leave_request_section",
-                        on: "right"
-                    },
-                    buttons: [
-                        {
-                            action: this.tourGoNext,
-                            text: "Next"
-                        }
-                    ]
-                },
-                {
-                    title: this.getOnboardingContent('transaction_section', 'title'),
-                    text: this.getOnboardingContent('transaction_section', 'description'),
-                    attachTo: {
-                        element: ".transaction_section",
-                        on: "right"
-                    },
-                    buttons: [
-                        {
-                            action: this.tourGoNext,
-                            text: "Next"
-                        }
-                    ]
-                },
-                {
-                    title: this.getOnboardingContent('admission_plan_section', 'title'),
-                    text: this.getOnboardingContent('admission_plan_section', 'description'),
-                    attachTo: {
-                        element: ".admission_plan_section",
-                        on: "right"
-                    },
-                    buttons: [
-                        {
-                            action: this.tourGoNext,
-                            text: "Next"
-                        }
-                    ]
-                },
-
-                {
-                    title: this.getOnboardingContent('event_section', 'title'),
-                    text: this.getOnboardingContent('event_section', 'description'),
-                    attachTo: {
-                        element: ".event_section",
-                        on: "right"
-                    },
-                    buttons: [
-                        {
-                            action: this.tourGoNext,
-                            text: "Next"
-                        }
-                    ]
-                },
-                {
-                    title: this.getOnboardingContent('notice_board_section', 'title'),
-                    text: this.getOnboardingContent('notice_board_section', 'description'),
-                    attachTo: {
-                        element: ".notice_board_section",
-                        on: "right"
-                    },
-                    buttons: [
-                        {
-                            action: this.tourGoNext,
-                            text: "Next"
-                        }
-                    ]
-                },
-                {
-                    title: this.getOnboardingContent('courseqr_board_section', 'title'),
-                    text: this.getOnboardingContent('courseqr_board_section', 'description'),
-                    attachTo: {
-                        element: ".courseqr_board_section",
-                        on: "right"
-                    },
-                    buttons: [
-                        {
-                            action: this.tourGoNext,
-                            text: "Next"
-                        }
-                    ]
-                },
-                {
-                    title: this.getOnboardingContent('teacherattendance_board_section', 'title'),
-                    text: this.getOnboardingContent('teacherattendance_board_section', 'description'),
-                    attachTo: {
-                        element: ".teacherattendance_board_section",
-                        on: "right"
-                    },
-                    buttons: [
-                        {
-                            action: this.tourGoNext,
-                            text: "Next"
-                        }
-                    ]
-                },
-                {
-                    title: this.getOnboardingContent('student_section', 'title'),
-                    text: this.getOnboardingContent('student_section', 'description'),
-                    attachTo: {
-                        element: ".student_section",
-                        on: "right"
-                    },
-                    buttons: [
-                        {
-                            action: this.tourGoNext,
-                            text: "Next"
-                        }
-                    ]
-                },
-                {
-                    title: this.getOnboardingContent('admission_section', 'title'),
-                    text: this.getOnboardingContent('admission_section', 'description'),
-                    attachTo: {
-                        element: ".admission_section",
-                        on: "right"
-                    },
-                    buttons: [
-                        {
-                            action: this.tourGoNext,
-                            text: "Next"
-                        }
-                    ]
-                },
-                {
-                    title: this.getOnboardingContent('promotion_section', 'title'),
-                    text: this.getOnboardingContent('promotion_section', 'description'),
-                    attachTo: {
-                        element: ".promotion_section",
-                        on: "right"
-                    },
-                    buttons: [
-                        {
-                            action: this.tourGoNext,
-                            text: "Next"
-                        }
-                    ]
-                },
-                {
-                    title: this.getOnboardingContent('admission_form_section', 'title'),
-                    text: this.getOnboardingContent('admission_form_section', 'description'),
-                    attachTo: {
-                        element: ".admission_form_section",
-                        on: "right"
-                    },
-                    buttons: [
-                        {
-                            action: this.tourGoNext,
-                            text: "Next"
-                        }
-                    ]
-                },
-                {
-                    title: this.getOnboardingContent('users_section', 'title'),
-                    text: this.getOnboardingContent('users_section', 'description'),
-                    attachTo: {
-                        element: ".users_section",
-                        on: "right"
-                    },
-                    buttons: [
-                        {
-                            action: this.tourGoNext,
-                            text: "Next"
-                        }
-                    ]
-                },
-                {
-                    title: this.getOnboardingContent('teachers_section', 'title'),
-                    text: this.getOnboardingContent('teachers_section', 'description'),
-                    attachTo: {
-                        element: ".teachers_section",
-                        on: "right"
-                    },
-                    buttons: [
-                        {
-                            action: this.tourGoNext,
-                            text: "Next"
-                        }
-                    ]
-                },
-                {
-                    title: this.getOnboardingContent('holiday_section', 'title'),
-                    text: this.getOnboardingContent('holiday_section', 'description'),
-                    attachTo: {
-                        element: ".holiday_section",
-                        on: "right"
-                    },
-                    buttons: [
-                        {
-                            action: this.tourGoNext,
-                            text: "Next"
-                        }
-                    ]
-                },
-                {
-                    title: this.getOnboardingContent('report_section', 'title'),
-                    text: this.getOnboardingContent('report_section', 'description'),
-                    attachTo: {
-                        element: ".report_section",
-                        on: "right"
-                    },
-                    buttons: [
-                        {
-                            action: this.tourGoNext,
-                            text: "Next"
-                        }
-                    ]
-                },
-                {
-                    title: this.getOnboardingContent('sms_section', 'title'),
-                    text: this.getOnboardingContent('sms_section', 'description'),
-                    attachTo: {
-                        element: ".sms_section",
-                        on: "right"
-                    },
-                    buttons: [
-                        {
-                            action: this.tourGoNext,
-                            text: "Next"
-                        }
-                    ]
-                },
-            ]
         };
     },
-    mounted: function () {
-        this.tour = new Shepherd.Tour({
-            useModalOverlay: true,
-            tourName: "UserTour",
-            defaultStepOptions: {
-                scrollTo: {
-                    behavior: "smooth",
-                    block: "center"
-                },
-                cancelIcon: {
-                    enabled: true,
-                    label: "Close tour"
-                }
-            }
-        });
-
-        this.steps.forEach(step => {
-            this.tour.addStep(step);
-        });
-
-        if (!this.$page.props.auth.tour_completed) {
-            this.tour.start();
-        }
-
-        this.tour.on('cancel', () => {
-            const sidebar = document.querySelector(".sidebar");
-            const sidebarOverlay = document.querySelector(".sidebar-overlay");
-            sidebar.classList.remove("active");
-            sidebarOverlay.classList.remove("active");
-            this.$inertia.post(this.route('tour.completed'), {}, {
-                preserveScroll: true
-            });
-        });
-    },
     methods: {
-        tourGoNext() {
-            this.tour.next();
-            this.completeStep();
-        },
-        completeStep() {
-            let total_steps = this.tour.steps.length;
-            let current_step = this.tour.steps.indexOf(this.tour.currentStep);
-            if (total_steps == current_step + 1) {
-                const sidebar = document.querySelector(".sidebar");
-                const sidebarOverlay = document.querySelector(".sidebar-overlay");
-                sidebar.classList.remove("active");
-                sidebarOverlay.classList.remove("active");
-                this.$inertia.post(this.route('tour.completed'), {}, {
-                    preserveScroll: true
-                });
-            }
-        },
-        tourGoback() {
-            this.tour.back();
-        },
-        complete() {
-            this.tour.cancel();
-        },
         toggleList(arg) {
             if (arg == "list") {
                 if (this.list) {

@@ -17,7 +17,7 @@ class UserSeeder extends Seeder
     public function run()
     {
         $admin = User::create([
-            'id' => 5,
+            'id'=> 5,
             'name' => 'Developer',
             'role' => 'Admin',
             'email' => 'developer@mail.com',
@@ -57,39 +57,39 @@ class UserSeeder extends Seeder
         //     'date_of_birth' => '1996-01-25',
         // ]);
 
-        User::factory()->count(100)->create();
+        // User::factory()->count(100)->create();
 
-        $students = User::where('role', 'Student')->get();
-        foreach ($students as $student) {
-            $student->profile()->create([
-                'roll_no' => rand(1, 2000).Str::random(1),
-                'session' => '2023-2023',
-                'student_id' => idGenerate(),
-                'blood_group' => Arr::random(['A+', 'A-', 'B+', 'B-', 'O+', 'O-', 'AB+', 'AB-']),
-                'physical_disability' => Arr::random(['Normal', 'Blind']),
-                'previous_school_name' => 'Test School',
-                'previous_school_year_of_exist' => '2010',
-            ]);
-            // parent store
-            $rand = rand(1, 3);
-            for ($i = 0; $i < $rand; $i++) {
-                $student->parents()->sync(User::parent()->inRandomOrder()->value('id'));
-            }
-        }
+        // $students = User::where('role', 'Student')->get();
+        // foreach ($students as $student) {
+        //     $student->profile()->create([
+        //         'roll_no' => rand(1, 2000).Str::random(1),
+        //         'session' => '2023-2023',
+        //         'student_id' => idGenerate(),
+        //         'blood_group' => Arr::random(['A+', 'A-', 'B+', 'B-', 'O+', 'O-', 'AB+', 'AB-']),
+        //         'physical_disability' => Arr::random(['Normal', 'Blind']),
+        //         'previous_school_name' => 'Test School',
+        //         'previous_school_year_of_exist' => '2010',
+        //     ]);
+        //     // parent store
+        //     $rand = rand(1, 3);
+        //     for ($i = 0; $i < $rand; $i++) {
+        //         $student->parents()->sync(User::parent()->inRandomOrder()->value('id'));
+        //     }
+        // }
 
-        for ($i = 0; $i < 3; $i++) {
-            $student->parents()->sync(User::where('email', 'parent@mail.com')->value('id'));
-        }
+        // for ($i = 0; $i < 3; $i++) {
+        //     $student->parents()->sync(User::where('email', 'parent@mail.com')->value('id'));
+        // }
 
-        $teachers = User::where('role', 'Teacher')->get();
-        foreach ($teachers as $teacher) {
-            $teacher->profile()->create([
-                'highest_degree_name' => 'Example Highest Degree',
-                'institute_name' => 'Example Institute Name',
-                'passing_year' => '2021',
-                'religion' => 'Islam',
-                'nationality' => 'Bangladeshi',
-            ]);
-        }
+        // $teachers = User::where('role', 'Teacher')->get();
+        // foreach ($teachers as $teacher) {
+        //     $teacher->profile()->create([
+        //         'highest_degree_name' => 'Example Highest Degree',
+        //         'institute_name' => 'Example Institute Name',
+        //         'passing_year' => '2021',
+        //         'religion' => 'Islam',
+        //         'nationality' => 'Bangladeshi',
+        //     ]);
+        // }
     }
 }

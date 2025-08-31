@@ -148,6 +148,7 @@ Route::get('teacher-rating/attendance', [ReportController::class, 'rating'])->na
 Route::get('teacher/late', [ReportController::class, 'lateReport'])->name('teacher.lateness.report');
 Route::get('teacher-class/attendance', [AttendanceController::class, 'getTeacherClassAttendance'])->name('teacher.class');
 Route::get('courses/{id}/print-qr-code', [CourseController::class, 'printQrCode'])->name('courses.printQrCode');
+
 // web.php atau routes file yang relevan
 Route::put('/course/{id}', [CourseController::class, 'update'])->name('course.update');
 Route::post('/forgot-password-admin', [ActivityLogController::class, 'passwordadmin'])->name('password.admin');
@@ -156,9 +157,8 @@ Route::get('/attendance/create', [AcademicAttendanceController::class, 'create']
 Route::post('/attendance', [AttendanceController::class, 'store'])->name('attendance.store');
 Route::get('/users/by-role', [UserController::class, 'getUsersByRole'])->name('users.byRole');
 
-
-
-
+Route::get('/alumni/batch', [\App\Http\Controllers\Admin\AlumniController::class, 'showBatchForm'])->name('alumni.batch.form');
+Route::post('/alumni/batch', [\App\Http\Controllers\Admin\AlumniController::class, 'batchPromote'])->name('alumni.batch.promote');
 
 
 include base_path('routes/auth.php');
